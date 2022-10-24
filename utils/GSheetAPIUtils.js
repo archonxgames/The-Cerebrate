@@ -5,7 +5,7 @@ const {authenticate} = require('@google-cloud/local-auth');
 const {google} = require('googleapis');
 
 // If modifying these scopes, delete token.json.
-const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
+const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
@@ -46,14 +46,12 @@ async function saveCredentials(client) {
   await fs.writeFile(TOKEN_PATH, payload);
 }
 
-
-
-module.exports = {
 /**
 * Load or request or authorization to call APIs.
 *
+* @return {OAuth2Client} client
 */
-async authorize() {
+async function authorize() {
 	let client = await loadSavedCredentialsIfExist();
 	if (client) {
 		return client;
@@ -66,8 +64,9 @@ async authorize() {
 		await saveCredentials(client);
 	}
 	return client;
-},
+}
 
+module.exports = {
 /**
 * Gets cell values from a Spreadsheet.
 * @param {string} spreadsheetId The spreadsheet ID.
@@ -75,14 +74,8 @@ async authorize() {
 * @return {obj} spreadsheet information
 */
 async getValues(spreadsheetId, range) {
-	const {GoogleAuth} = require('google-auth-library');
 	const {google} = require('googleapis');
-
-	const auth = new GoogleAuth({
-		scopes: 'https://www.googleapis.com/auth/spreadsheets',
-	});
-
-	const service = google.sheets({version: 'v4', auth});
+	const service = google.sheets({version: 'v4', auth: await authorize()});
 	try {
 		const result = await service.spreadsheets.values.get({
 			spreadsheetId,

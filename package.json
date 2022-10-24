@@ -2,12 +2,21 @@
   "dependencies": {
     "@discordjs/builders": "^0.15.0",
     "@discordjs/rest": "^0.5.0",
+<<<<<<< HEAD
     "@google-cloud/local-auth": "^2.1.0",
     "discord-api-types": "^0.36.1",
     "discord.js": "^14.5.0",
     "googleapis": "^105.0.0",
     "mysql2": "^2.3.3",
     "sequelize": "^6.25.2"
+=======
+    "@keyv/mongo": "^2.1.6",
+    "discord-api-types": "^0.36.1",
+    "discord.js": "^14.5.0",
+    "keyv": "^4.5.0",
+    "sequelize": "^6.23.2",
+    "sqlite3": "^5.1.1"
+>>>>>>> da13bb9cb8b8ee38c88da639b4126fc847292d3a
   },
   "name": "cerebrate-talos",
   "version": "1.0.0",
@@ -17,9 +26,12 @@
     "eslint": "^8.19.0"
   },
   "scripts": {
+<<<<<<< HEAD
     "start": "node .",
     "updateglobal": "node deploy-commands-global",
     "updatelocal": "node deploy-commands-local",
+=======
+>>>>>>> da13bb9cb8b8ee38c88da639b4126fc847292d3a
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
