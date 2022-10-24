@@ -79,14 +79,14 @@ module.exports = {
 
 		try {
 			await webhook.send({
-				content: message.content || 'Edit this message!',
+				content: (message) ? message.content : 'To edit this message, create a template message using https://discohook.org and re-run the `production init` command with the `message-id` field containing the message ID of the template message.',
 				components: [row],
-				embeds: message.embeds || []
+				embeds: (message) ? message.embeds : []
 			})
 
 			await interaction.reply({content: 'Production log message created. Use https://discohook.org to edit the webhook message.', ephemeral: true})
 		} catch (error) {
-			return console.error('ERROR - init.js - Error trying to send a message', error)
+			return console.error('ERROR - init.js - Error trying to send a message\n', error)
 		}
 	}
 }
