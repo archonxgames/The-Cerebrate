@@ -48,6 +48,20 @@ modal.addComponents(
 	new ActionRowBuilder().addComponents(unitInput)
 )
 
+async function execute(interaction) {
+	const user_ = `<@${interaction.user.id}>`;
+	const source = interaction.fields.getTextInputValue('source');
+	const target = interaction.fields.getTextInputValue('target');
+	const item_ = interaction.fields.getTextInputValue('item');
+	const amount_ = interaction.fields.getTextInputValue('amount');
+	const unit_ = interaction.fields.getTextInputValue('unit');
+	console.log({ user_, source, target, item_, amount_, unit_ });
+	
+	await interaction.reply({ content: 'Your submission was received successfully. Thank you for your service!', ephemeral: true });
+	await interaction.channel.send({ content: `${user_} has transferred **${amount_} ${unit_.toLowerCase() + ((amount_ > 1) ? 's' : '')}** of **${item_}** from **${source}** to **${target}**.` });
+}
+
 module.exports = {
-	modal: modal
+	modal: modal,
+	execute
 }
