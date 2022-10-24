@@ -1,0 +1,27 @@
+{
+  "dependencies": {
+    "@discordjs/builders": "^0.15.0",
+    "@discordjs/rest": "^0.5.0",
+    "@google-cloud/local-auth": "^2.1.0",
+    "discord-api-types": "^0.36.1",
+    "discord.js": "^14.5.0",
+    "googleapis": "^105.0.0",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.25.2"
+  },
+  "name": "cerebrate-talos",
+  "version": "1.0.0",
+  "description": "The logistical hivemind of Foxhole's SAF clan, monitoring and managing logistics for the war.",
+  "main": "index.js",
+  "devDependencies": {
+    "eslint": "^8.19.0"
+  },
+  "scripts": {
+    "start": "node .",
+    "updateglobal": "node deploy-commands-global",
+    "updatelocal": "node deploy-commands-local",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
