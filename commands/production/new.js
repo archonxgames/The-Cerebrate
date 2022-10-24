@@ -17,7 +17,8 @@ module.exports = {
 					return await interaction.showModal(SubmitItemModal.modal)
 			}
 		} catch (error) {
-			return console.error('ERROR - new.js - Error trying to send modal', error)
+			console.error('ERROR - new.js - Error trying to send modal\n', error)
+			return await interaction.reply({content: 'There was an error while executing this command!', ephemeral: true})
 		}
 	}
 }
