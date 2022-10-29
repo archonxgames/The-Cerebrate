@@ -1,4 +1,4 @@
-const { mysqlDB, mysqlHost, mysqlPort, mysqlUser, mysqlPass } = require('../config.json');
+const { mysqlDB, mysqlHost, mysqlPort, mysqlUser, mysqlPass } = require('../../config.json');
 const { Sequelize, DataTypes } = require('sequelize')
 
 const sequelize = new Sequelize(`mysql://${mysqlUser}:${mysqlPass}@${mysqlHost}:${mysqlPort}/${mysqlDB}`)
