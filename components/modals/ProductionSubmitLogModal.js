@@ -1,5 +1,8 @@
 const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders')
 const { TextInputStyle } = require('discord.js')
+const gapi = require('../../utils/GSheetAPIUtils')
+const { spreadsheetId } = require('../../config.json')
+const dt = require('../../utils/DateTime')
 
 const modal = new ModalBuilder()
 	.setCustomId('newProductionSubmitLog')
@@ -40,15 +43,19 @@ modal.addComponents(
 )
 
 async function execute(interaction) {
-	const user = `<@${interaction.user.id}>`;
-	const stockpile = interaction.fields.getTextInputValue('stockpile');
-	const item = interaction.fields.getTextInputValue('item');
-	const amount = interaction.fields.getTextInputValue('amount');
-	const unit = interaction.fields.getTextInputValue('unit');
-	console.log({ user, stockpile, item, amount, unit });
+	const user = interaction.user
+	const stockpile = interaction.fields.getTextInputValue('stockpile')
+	const item = interaction.fields.getTextInputValue('item')
+	const amount = interaction.fields.getTextInputValue('amount')
+	const unit = interaction.fields.getTextInputValue('unit')
+	console.log({ user, stockpile, item, amount, unit })
+
+	const range = `'Production Log'`
+	const values = [[dt.format(new Date()),user.username, stockpile, item, amount, unit]]
 	
-	await interaction.reply({ content: 'Your submission was received successfully. Thank you for your service!', ephemeral: true });
-	await interaction.channel.send({ content: `${user} has submitted **${amount} ${unit.toLowerCase() + ((amount > 1) ? 's' : '')}** of **${item}** to **${stockpile}**.` });
+	gapi.appendValues(spreadsheetId, range, 'USER_ENTERED', values)
+	await interaction.reply({ content: 'Your submission was received successfully. Thank you for your service!', ephemeral: true })
+	await interaction.channel.send({ content: `<@${user.id}> has submitted **${amount} ${unit.toLowerCase() + ((amount > 1) ? 's' : '')}** of **${item}** to **${stockpile}**.` })
 }
 
 module.exports = {
