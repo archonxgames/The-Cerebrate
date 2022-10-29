@@ -68,6 +68,31 @@ async function authorize() {
 
 module.exports = {
 /**
+ * Create a google spreadsheet
+ * @param {string} title Spreadsheets title
+ * @return {string} Created spreadsheets ID
+ */
+ async create(title) {
+  const service = google.sheets({version: 'v4', auth: await authorize()});
+  const resource = {
+    properties: {
+      title,
+    },
+  };
+  try {
+    const spreadsheet = await service.spreadsheets.create({
+      resource,
+      fields: 'spreadsheetId',
+    });
+    console.log(`INFO - Spreadsheet ID: ${spreadsheet.data.spreadsheetId}`);
+    return spreadsheet.data.spreadsheetId;
+  } catch (err) {
+    // TODO (developer) - Handle exception
+    throw err;
+  }
+},
+
+/**
 * Gets cell values from a Spreadsheet.
 * @param {string} spreadsheetId The spreadsheet ID.
 * @param {string} range The sheet range.
