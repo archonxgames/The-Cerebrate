@@ -22,7 +22,7 @@ module.exports = {
 				console.log('INFO - Fetched message from message ID\n', message)
 			} catch (error) {
 				await interaction.reply({ content: 'An error occurred while fetching the referenced message. Please try again.', ephemeral: true })
-				return console.error('ERROR - init.js - Failed to fetch message\n', error)
+				return console.error('ERROR - menu.js - Failed to fetch message\n', error)
 			}
 		}
 
@@ -40,7 +40,7 @@ module.exports = {
 				}
 			} catch (error) {
 				await interaction.reply({ content: 'Failed to fetch a usable webhook. Please try again.', ephemeral: true })
-				return console.error('ERROR - init.js - Failed to fetch webhook\n', error)
+				return console.error('ERROR - menu.js - Failed to fetch webhook\n', error)
 			}
 		} else {
 			try {
@@ -50,7 +50,7 @@ module.exports = {
 				})
 				console.log('INFO - New webhook generated\n', webhook)
 			} catch (error) {
-				return console.error('ERROR - init.js - Failed to generate webhook\n', error)
+				return console.error('ERROR - menu.js - Failed to generate webhook\n', error)
 			}
 		}
 		
@@ -79,14 +79,14 @@ module.exports = {
 
 		try {
 			await webhook.send({
-				content: (message) ? message.content : 'To edit this message, create a template message using https://discohook.org and re-run the `production init` command with the `message-id` field containing the message ID of the template message.',
+				content: (message) ? message.content : 'To edit this message, create a template message using https://discohook.org and re-run the `production menu` command with the `message-id` field containing the message ID of the template message.',
 				components: [row],
 				embeds: (message) ? message.embeds : []
 			})
 
 			await interaction.reply({content: 'Production log message created. Use https://discohook.org to edit the webhook message.', ephemeral: true})
 		} catch (error) {
-			return console.error('ERROR - init.js - Error trying to send a message\n', error)
+			return console.error('ERROR - menu.js - Error trying to send a message\n', error)
 		}
 	}
 }
