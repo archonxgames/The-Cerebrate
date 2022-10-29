@@ -41,11 +41,11 @@ module.exports = {
 			if (interaction.customId === 'production-log-type') {
 				switch(interaction.values[0]) {
 					case 'submit':
-						await interaction.showModal(SubmitItemModal.modal)
-						break
+						return await interaction.showModal(SubmitItemModal.modal)
 					case 'transfer':
-						await interaction.showModal(TransferItemModal.modal)
-						break
+						return await interaction.showModal(TransferItemModal.modal)
+					default:
+						return
 				}
 			}
 		}
