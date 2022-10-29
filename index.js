@@ -21,7 +21,7 @@ for (const file of commandFiles) {
 }
 
 console.log('INFO - Syncing Database Models')
-const modelsPath = path.join(__dirname, 'models');
+const modelsPath = path.join(__dirname, 'data/models');
 const modelFiles = fs.readdirSync(modelsPath).filter(file => file.endsWith('.js'));
 
 for (const file of modelFiles) {

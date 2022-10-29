@@ -4,7 +4,7 @@ module.exports = {
 		console.log(message)
 		//increase dumbledore count if a non-bot user says dumbledore
 		if (!message.author.bot && message.content.toLowerCase().includes('dumbledore')) {
-			const Tag = require('../models/tag').data
+			const Tag = require('../data/models/tag').data
 			const tag = await Tag.findOne({
 				where: {
 					tag: 'dumbledore'

@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const Tag = require('../models/tag').data
+const Tag = require('../data/models/tag').data
 
 module.exports = {
 	data: new SlashCommandBuilder()
