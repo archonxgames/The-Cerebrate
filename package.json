@@ -3,6 +3,7 @@
     "@discordjs/builders": "^0.15.0",
     "@discordjs/rest": "^0.5.0",
     "@google-cloud/local-auth": "^2.1.0",
+    "axios": "^1.1.3",
     "discord-api-types": "^0.36.1",
     "discord.js": "^14.5.0",
     "googleapis": "^105.0.0",
@@ -20,6 +21,7 @@
     "start": "node .",
     "updateglobal": "node deploy-commands-global",
     "updatelocal": "node deploy-commands-local",
+		"sync": "node sync-database-models",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
