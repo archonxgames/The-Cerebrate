@@ -1,7 +1,7 @@
 const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders')
 const { TextInputStyle } = require('discord.js')
-const gapi = require('../../utils/GSheetAPIUtils')
-const { spreadsheetId } = require('../../config.json')
+const gapi = require('../../utils/GoogleAPIUtils')
+const { templSheetId } = require('../../config.json')
 const dt = require('../../utils/DateTime')
 
 const modal = new ModalBuilder()
@@ -53,7 +53,7 @@ async function execute(interaction) {
 	const range = `'Production Log'`
 	const values = [[dt.format(new Date()),user.username, stockpile, item, amount, unit]]
 	
-	gapi.appendValues(spreadsheetId, range, 'USER_ENTERED', values)
+	gapi.sheets.appendValues(templSheetId, range, 'USER_ENTERED', values)
 	await interaction.reply({ content: 'Your submission was received successfully. Thank you for your service!', ephemeral: true })
 	await interaction.channel.send({ content: `<@${user.id}> has submitted **${amount} ${unit.toLowerCase() + ((amount > 1) ? 's' : '')}** of **${item}** to **${stockpile}**.` })
 }

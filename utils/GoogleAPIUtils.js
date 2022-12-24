@@ -1,11 +1,11 @@
 const fs = require('fs').promises
 const path = require('path')
 const process = require('process')
-const {authenticate} = require('@google-cloud/local-auth')
 const {google} = require('googleapis')
+const {authenticate} = require('@google-cloud/local-auth')
 
 // If modifying these scopes, delete token.json.
-const SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+const SCOPES = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
@@ -67,6 +67,12 @@ async function authorize() {
 }
 
 module.exports = {
+authorize: async () => {
+	await authorize()
+},
+
+//GOOGLE SHEETS API
+sheets: {
 /**
  * Create a google spreadsheet
  * @param {string} title Spreadsheets title
@@ -78,17 +84,17 @@ module.exports = {
     properties: {
       title,
     },
-  };
+  }
   try {
     const spreadsheet = await service.spreadsheets.create({
       resource,
       fields: 'spreadsheetId',
-    });
+    })
     console.log(`INFO - Spreadsheet ID: ${spreadsheet.data.spreadsheetId}`);
     return spreadsheet.data.spreadsheetId;
   } catch (err) {
     // TODO (developer) - Handle exception
-    throw err;
+    throw err
   }
 },
 
@@ -99,7 +105,6 @@ module.exports = {
 * @return {obj} spreadsheet information
 */
 async getValues(spreadsheetId, range) {
-	const {google} = require('googleapis')
 	const service = google.sheets({version: 'v4', auth: await authorize()})
 	try {
 		const result = await service.spreadsheets.values.get({
@@ -123,23 +128,22 @@ async getValues(spreadsheetId, range) {
  * @param {(string[])[]} values A 2d array of values to update.
  * @return {obj} spreadsheet information
  */
- async updateValues(spreadsheetId, range, valueInputOption, values) {
-  const {google} = require('googleapis')
-  const service = google.sheets({version: 'v4', auth: await authorize()})
-  const resource = { values }
-  try {
-    const result = await service.spreadsheets.values.update({
-      spreadsheetId,
-      range,
-      valueInputOption,
-      resource,
-    })
-    console.log('INFO - %d cells updated.', result.data.updatedCells)
-    return result
-  } catch (err) {
-    // TODO (Developer) - Handle exception
-    throw err
-  }
+async updateValues(spreadsheetId, range, valueInputOption, values) {
+	const service = google.sheets({version: 'v4', auth: await authorize()})
+	const resource = { values }
+	try {
+		const result = await service.spreadsheets.values.update({
+			spreadsheetId,
+			range,
+			valueInputOption,
+			resource,
+		})
+		console.log('INFO - %d cells updated.', result.data.updatedCells)
+		return result
+	} catch (err) {
+		// TODO (Developer) - Handle exception
+		throw err
+	}
 },
 
 /**
@@ -150,22 +154,78 @@ async getValues(spreadsheetId, range) {
  * @param {(string[])[]} _values A 2d array of values to append.
  * @return {obj} spreadsheet information
  */
- async appendValues(spreadsheetId, range, valueInputOption, values) {
-  const {google} = require('googleapis')
-  const service = google.sheets({version: 'v4', auth: await authorize()})
+async appendValues(spreadsheetId, range, valueInputOption, values) {
+	const service = google.sheets({version: 'v4', auth: await authorize()})
 
 	const resource = { values }
-  try {
-    const result = await service.spreadsheets.values.append({
-      spreadsheetId,
-      range,
-      valueInputOption,
-      resource,
-    })
-    console.log(`INFO - ${result.data.updates.updatedCells} cells appended.`)
-    return result
-  } catch (err) {
-    // TODO (developer) - Handle exception
-    throw err
-  }
-}}
+	try {
+		const result = await service.spreadsheets.values.append({
+			spreadsheetId,
+			range,
+			valueInputOption,
+			resource,
+		})
+		console.log(`INFO - ${result.data.updates.updatedCells} cells appended.`)
+		return result
+	} catch (err) {
+		// TODO (developer) - Handle exception
+		throw err
+	}
+}},
+
+//GOOGLE DRIVE API
+drive: {
+/**
+ * Copy a google drive file
+ * @param {string} folderId The id of the folder the copied file will be stored in
+ * @param {string} fileId The id of the file to copy
+ * @param {string} name The name of the new file
+ * @return {string} Created spreadsheet's ID
+ */
+async copyFileToFolder(folderId, fileId, name) {
+	const service = google.drive({version: 'v3', auth: await authorize()});
+
+	try {
+		//Duplicate file
+		const resource = {
+			name: name,
+			parents: [folderId],
+			fields: 'id'
+		}
+		const file = await service.files.copy({
+			fileId,
+			resource
+		})
+		console.log('INFO - File duplicated:\n', file)
+		return file.data.id
+	} catch (err) {
+		// TODO(developer) - Handle error
+		throw err;
+	}
+},
+
+async shareFileToPublic(fileId) {
+  const service = google.drive({version: 'v3', auth: await authorize()});
+
+  const permission = {
+		type: 'anyone',
+		role: 'writer'
+	}
+  // Note: Client library does not currently support HTTP batch
+  // requests. When possible, use batched requests when inserting
+  // multiple permissions on the same item. For this sample,
+  // permissions are inserted serially.
+	try {
+		const result = await service.permissions.create({
+			resource: permission,
+			fileId: fileId,
+			fields: 'id',
+		});
+		console.log(`INFO - Inserted permission id: ${result.data.id}`);
+		
+		return result
+	} catch (err) {
+		// TODO(developer) - Handle error
+		throw err;
+	}
+}}}

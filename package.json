@@ -22,6 +22,7 @@
     "updateglobal": "node deploy-commands-global",
     "updatelocal": "node deploy-commands-local",
 		"sync": "node sync-database-models",
+		"reauth": "node reauth",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
