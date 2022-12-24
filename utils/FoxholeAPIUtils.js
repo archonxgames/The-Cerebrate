@@ -8,7 +8,7 @@ async getWarData() {
 
 	try {
 		result = await axios.get(`${basepath}${endpoint}`)
-		console.log('INFO - Foxhole war data retrieved result\n', result.data)
+		console.log('INFO - Foxhole war data retrieved:\n', result.data)
 	} catch(error) {
 		console.error('ERROR - FoxholeAPIUtils.js - Unable to retrieve war data from foxhole api\n', error)
 		throw(error)
