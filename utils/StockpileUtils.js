@@ -1,6 +1,15 @@
+const gapi = require('./GoogleAPIUtils')
+const { folderId, templSheetId } = require('../config.json')
+
 module.exports = {
-async createStockpileSheet(warData) {
-	let sheet = '1CXKZ3zltOE6HElA8mBl0YNeHin9MkLcx9ARc94q-CMc'
-	return sheet
+async createStockpileSheetFromTemplate(warData) {
+	//Copy file from template
+	let title = `War ${warData.warNumber} - Logistics`
+	let sheetId = await gapi.drive.copyFileToFolder(folderId, templSheetId, title)
+	
+	//Share the file
+	await gapi.drive.shareFileToPublic(sheetId)
+	
+	return sheetId
 }
 }

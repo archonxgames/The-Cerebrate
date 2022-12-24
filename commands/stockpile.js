@@ -8,6 +8,10 @@ module.exports = {
 			subcommand
 				.setName('init')
 				.setDescription('Initialize a new stockpile sheet based on the current war.'))
+				.addSubcommand(subcommand =>
+					subcommand
+						.setName('init')
+						.setDescription('Initialize a new stockpile sheet based on the current war.'))
 		.addSubcommand(subcommand =>
 			subcommand
 				.setName('sheet')
