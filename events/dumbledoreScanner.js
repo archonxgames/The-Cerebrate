@@ -1,5 +1,5 @@
 module.exports = {
-	name: 'messageCreate',
+	type: 'messageCreate',
 	async execute(message) {
 		console.log(message)
 		//increase dumbledore count if a non-bot user says dumbledore

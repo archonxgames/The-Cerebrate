@@ -1,5 +1,5 @@
 module.exports = {
-	name: 'ready',
+	type: 'ready',
 	once: true,
 	execute(client) {
 		console.log(`INFO - ${client.user.tag} is now online.`);
