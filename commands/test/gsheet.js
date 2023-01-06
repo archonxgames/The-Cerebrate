@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const gapi = require('../utils/GoogleAPIUtils')
-const { spreadsheetId } = require('../config.json')
+const gapi = require('../../utils/GoogleAPIUtils')
+const { spreadsheetId } = require('../../config.json')
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('gsheet')

@@ -7,11 +7,8 @@ module.exports = {
 		.addSubcommand(subcommand =>
 			subcommand
 				.setName('init')
-				.setDescription('Initialize a new stockpile sheet based on the current war.'))
-				.addSubcommand(subcommand =>
-					subcommand
-						.setName('init')
-						.setDescription('Initialize a new stockpile sheet based on the current war.'))
+				.setDescription('Initialize a new stockpile sheet based on the current war.')
+			)
 		.addSubcommand(subcommand =>
 			subcommand
 				.setName('sheet')
@@ -21,7 +18,7 @@ module.exports = {
 						.setName('war')
 						.setDescription('The war iteration. Defaults to the current iteration of the war.')
 						.setRequired(false)
-				)),
+			)),
 
 	async execute(interaction) {
 		switch(interaction.options.getSubcommand()) {
