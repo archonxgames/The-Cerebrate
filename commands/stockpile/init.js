@@ -45,11 +45,11 @@ module.exports = {
 		//Save google sheet link to database
 		try {
 			var url = `https://docs.google.com/spreadsheets/d/${sheetId}/edit?usp=sharing`
-			console.log(`INFO - Saving google sheet link to database\n`, url)
+			console.log(`INFO - Saving google sheet id to database\n`, url)
 			
-			await StockpileSheet.create({guildId, war, sheetUrl: url})
+			await StockpileSheet.create({guildId, war, sheetId})
 		} catch (error) {
-			console.error('ERROR - init.js - Error saving google sheet link to database\n', error)
+			console.error('ERROR - init.js - Error saving google sheet id to database\n', error)
 			return await interaction.editReply({content: 'There was an error while executing this command!', ephemeral: true})
 		}
 
@@ -59,7 +59,7 @@ module.exports = {
 			embeds: [
 				{
 					title: `War ${war} Stockpile Sheet`,
-					description: 'Click on the link above to access the stockpile sheet. For a quick guide on how to use the sheet, <currently being created>.',
+					description: 'Click on the link above to access the stockpile sheet. For a quick guide on how to use the sheet, refer to the instructions found in the Dashboard.',
 					url: url,
 					color: '5078077'
 				}

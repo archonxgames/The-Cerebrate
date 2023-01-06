@@ -12,7 +12,7 @@ const model = sequelize.define('StockpileSheet', {
 		type: DataTypes.INTEGER,
 		allowNull: false
 	},
-	sheetUrl: {
+	sheetId: {
 		type: DataTypes.STRING,
 		allowNull: false
 	}

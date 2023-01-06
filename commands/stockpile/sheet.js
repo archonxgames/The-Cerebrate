@@ -3,6 +3,9 @@ const foxhole = require('../../utils/FoxholeAPIUtils')
 
 module.exports = {
 	async execute(interaction) {
+		//Defer the reply
+		await interaction.deferReply()
+
 		//Get the interaction data
 		const guildId = interaction.guildId
 		let war = interaction.options.getInteger('war')
@@ -15,7 +18,7 @@ module.exports = {
 				war = warData.warNumber
 			} catch (error) {
 				console.error('ERROR - sheet.js - Error obtaining current war data:\n', error)
-			return await interaction.reply({content: 'There was an error while executing this command!', ephemeral: true})
+				return await interaction.editReply({content: 'There was an error while executing this command!', ephemeral: true})
 			}
 		}
 
@@ -25,18 +28,18 @@ module.exports = {
 				where: { guildId, war }
 			})
 	
-			return await interaction.reply({
+			return await interaction.editReply({
 				embeds: [
 				{
 					title: `War ${war} Stockpile Sheet`,
-					description: 'Click on the link above to access the stockpile sheet. For a quick guide on how to use the sheet, <currently being created>.',
-					url: result.sheetUrl,
+					description: 'Click on the link above to access the stockpile sheet. For a quick guide on how to use the sheet, refer to the instructions found in the Dashboard.',
+					url: `https://docs.google.com/spreadsheets/d/${result.sheetId}/edit?usp=sharing`,
 					color: '5078077'
 				}
 			]})
 		} catch (error) {
 			console.error('ERROR - sheet.js - Error retrieving google sheet from database\n', error)
-			return await interaction.reply({content: 'There was an error while executing this command!', ephemeral: true})
+			return await interaction.editReply({content: 'There was an error while executing this command!', ephemeral: true})
 		}
 	}
 }
