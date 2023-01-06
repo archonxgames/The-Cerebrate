@@ -1,8 +1,10 @@
 const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders')
 const { TextInputStyle } = require('discord.js')
 const gapi = require('../../utils/GoogleAPIUtils')
-const { templSheetId } = require('../../config.json')
+const foxhole = require('../../utils/FoxholeAPIUtils')
 const dt = require('../../utils/DateTime')
+const ProductionSetting = require('../../data/models/ProductionSetting').data
+const StockpileSheet = require('../../data/models/StockpileSheet').data
 
 const modal = new ModalBuilder()
 	.setCustomId('newProductionSubmitLog')
@@ -43,6 +45,11 @@ modal.addComponents(
 )
 
 async function execute(interaction) {
+	//Defer the reply
+	await interaction.deferReply({ ephemeral: true })
+
+	//Get the interaction data
+	const guildId = interaction.guildId
 	const user = interaction.user
 	const stockpile = interaction.fields.getTextInputValue('stockpile')
 	const item = interaction.fields.getTextInputValue('item')
@@ -50,12 +57,59 @@ async function execute(interaction) {
 	const unit = interaction.fields.getTextInputValue('unit')
 	console.log({ user, stockpile, item, amount, unit })
 
-	const range = `'Production Log'`
-	const values = [[dt.format(new Date()),user.username, stockpile, item, amount, unit]]
+	//Obtain current war data
+	let war = null
+	try {
+		warData = await foxhole.getWarData()
+		war = warData.warNumber
+	} catch (error) {
+		console.error('ERROR - ProductionSubmitLogModal.js - Error obtaining current war data:\n', error)
+		return await interaction.editReply({content: 'There was an error while executing this command!', ephemeral: true})
+	}
+
+	//Append production log to gsheet
+	let result = null
+	try {
+		const result = await StockpileSheet.findOne({
+			where: { guildId, war }
+		})
+
+		if (result != null) {
+			let sheetId = result.sheetId
 	
-	gapi.sheets.appendValues(templSheetId, range, 'USER_ENTERED', values)
-	await interaction.reply({ content: 'Your submission was received successfully. Thank you for your service!', ephemeral: true })
-	await interaction.channel.send({ content: `<@${user.id}> has submitted **${amount} ${unit.toLowerCase() + ((amount > 1) ? 's' : '')}** of **${item}** to **${stockpile}**.` })
+			const range = `'Production Log'`
+			const values = [[dt.format(new Date()),user.username, stockpile, item, amount, unit]]
+			
+			gapi.sheets.appendValues(sheetId, range, 'USER_ENTERED', values)
+		}
+	} catch (error) {
+		console.error('ERROR - ProductionSubmitLogModal.js - Error updating google sheet\n', error)
+		return await interaction.editReply({content: 'There was an error while executing this command!', ephemeral: true})
+	}
+
+	//Attempt to send message in the production log channel
+	try {
+		let settings = await ProductionSetting.findOne({
+			where: { guildId }
+		})
+
+		//Create settings if none exists
+		if(settings == null) {
+			settings = await ProductionSetting.create({guildId})
+		} else {
+			let channel = (settings.logChannelId != null) ? 
+				await interaction.guild.channels.fetch(settings.logChannelId) :
+				interaction.channel
+			await channel.send({ content: `<@${user.id}> has submitted **${amount} ${unit.toLowerCase() + ((amount > 1) ? 's' : '')}** of **${item}** to **${stockpile}**.` })
+		}
+		if (result == null) {
+			return await interaction.editReply({content: 'Your submission was received successfully. Thank you for your service!.\nNo stockpile sheet exists to save the production log to. To create a stockpile sheet, enter the `/stockpile init` command.', ephemeral: true})
+		}
+		return await interaction.editReply({ content: 'Your submission was received successfully. Thank you for your service!', ephemeral: true })
+	} catch (error) {
+		console.error('ERROR - ProductionSubmitLogModal.js - Error sending reply to production log channel\n', error)
+		return await interaction.editReply({content: 'There was an error while executing this command!', ephemeral: true})
+	}
 }
 
 module.exports = {

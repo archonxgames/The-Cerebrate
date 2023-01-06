@@ -10,11 +10,11 @@ const model = sequelize.define('ProductionSetting', {
 		primaryKey: true
 	},
 	logChannelId: {
-		type: DataTypes.STRING(18),
+		type: DataTypes.STRING,
 		allowNull: true
 	},
 	webhookId: {
-		type: DataTypes.STRING(18),
+		type: DataTypes.STRING,
 		allowNull: true
 	},
 	webhookToken: {
@@ -22,7 +22,7 @@ const model = sequelize.define('ProductionSetting', {
 		allowNull: true
 	},
 	leaderboardMessageId: {
-		type: DataTypes.STRING(18),
+		type: DataTypes.STRING,
 		allowNull: true
 	}
 })

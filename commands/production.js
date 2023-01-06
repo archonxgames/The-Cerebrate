@@ -30,7 +30,17 @@ module.exports = {
 						.addChoices(
 							{ name: 'submit', value: 'submit' },
 							{ name: 'transfer', value: 'transfer' }
-						))),
+						)
+				))
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('log')
+				.setDescription('Sets the channel where all future production logs will be displayed.')
+				.addChannelOption(option =>
+					option.setName('channel')
+						.setDescription('The production log channel.')
+						.setRequired(true)
+				)),
 
 	async execute(interaction) {
 		switch(interaction.options.getSubcommand()) {
@@ -38,6 +48,8 @@ module.exports = {
 				return await require('./production/menu').execute(interaction)
 			case 'new':
 				return await require('./production/new').execute(interaction)
+			case 'log':
+				return await require('./production/log').execute(interaction)
 		}
 	},
 };
