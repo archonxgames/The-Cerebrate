@@ -26,12 +26,17 @@ module.exports = {
 		}
 		
 		//Check for duplicate entries in the database
-		const result = await StockpileSheet.findOne({
-			where: { guildId, war }
-		})
-		
-		if (result != null) {
-			return await interaction.editReply({content: 'You have already initialized a stockpile dashboard for this war. Please use the `/stockpile sheet` to access the corresponding stockpile sheet.', ephemeral: true})
+		try {
+			const result = await StockpileSheet.findOne({
+				where: { guildId, war }
+			})
+			
+			if (result != null) {
+				return await interaction.editReply({content: 'You have already initialized a stockpile dashboard for this war. Please use the `/stockpile sheet` to access the corresponding stockpile sheet.', ephemeral: true})
+			}
+		} catch (error) {
+			console.error('ERROR - init.js - Error checking duplicate entries in database\n', error)
+			return await interaction.editReply({content: 'There was an error while executing this command!', ephemeral: true})
 		}
 
 		//Generate a new google sheet based on current war data

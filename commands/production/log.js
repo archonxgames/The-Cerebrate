@@ -26,7 +26,6 @@ module.exports = {
 				settings.logChannelId = channel.id
 				await settings.save()
 			}
-			
 
 			return interaction.reply({content: 'Production log channel successfully set.', ephemeral: true})
 		} catch (error) {

@@ -22,7 +22,7 @@ module.exports = {
 			}
 		}
 
-		//Retrieve gsheet link from database
+		//Retrieve gsheet id from database
 		try {
 			const result = await StockpileSheet.findOne({
 				where: { guildId, war }
