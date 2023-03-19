@@ -11,7 +11,8 @@ module.exports = {
 				.addStringOption(option =>
 					option.setName('banner')
 						.setDescription('Link to the latest war banner.')
-						.setRequired(true))),
+						.setRequired(true)
+		)),
 
 	async execute(interaction) {
 		switch(interaction.options.getSubcommand()) {

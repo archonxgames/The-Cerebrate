@@ -12,12 +12,12 @@ module.exports = {
 					option.setName('channel')
 						.setDescription('The channel to deploy the logistics dashboard to.')
 						.setRequired(false)
-					))
+		))
 		.addSubcommand(subcommand =>
 			subcommand
 				.setName('refresh')
 				.setDescription('Manually refreshes the logistics dashboard.')
-				),
+		),
 	async execute(interaction) {
 		switch(interaction.options.getSubcommand()) {
 			case 'deploy':

@@ -3,13 +3,21 @@ const { Sequelize, DataTypes } = require('sequelize')
 
 const sequelize = new Sequelize(`mysql://${mysqlUser}:${mysqlPass}@${mysqlHost}:${mysqlPort}/${mysqlDB}`)
 
-const model = sequelize.define('ProductionSetting', {
+const model = sequelize.define('GuildSetting', {
 	guildId: {
 		type: DataTypes.STRING,
 		allowNull: false,
 		primaryKey: true
 	},
-	greetMessage: {
+	name: {
+		type: DataTypes.STRING,
+		allowNull: true
+	},
+	tag: {
+		type: DataTypes.STRING(5),
+		allowNull: true
+	},
+	iconId: {
 		type: DataTypes.STRING,
 		allowNull: true
 	},

@@ -15,6 +15,33 @@ function calculateProgress(target, predicted, actual) {
 	return 0
 }
 
+function renderTick(progress) {
+	return (progress >= 100) ? "<a:greentick:1015609031617949728>" : ""
+}
+
+function renderPriority(priority) {
+	switch(priority.toUpperCase()) {
+		case "HIGH":
+			return '<:PRIOHIGH:1061897931558486076>'
+		case "MED":
+			return '<:PRIOMED:1061897963191943229>'
+		case "LOW":
+			return '<:PRIOLOW:1061897988429066322>'
+	}
+}
+
+function renderProgressbar(progress) {
+	if (progress == 0) return ""
+	else if (progress < 13) return "<:redno:1056155122952048640>"
+	else if (progress <= 25) return "<:redno:1056155122952048640><:redno:1056155122952048640>"
+	else if (progress < 38) return "<:orangeno:1056154082890485770><:orangeno:1056154082890485770><:orangeno:1056154082890485770>"
+	else if (progress <= 50) return "<:orangeno:1056154082890485770><:orangeno:1056154082890485770><:orangeno:1056154082890485770><:orangeno:1056154082890485770>"
+	else if (progress < 63) return "<:yellowno:1056154087911079966><:yellowno:1056154087911079966><:yellowno:1056154087911079966><:yellowno:1056154087911079966><:yellowno:1056154087911079966>"
+	else if (progress <= 75) return "<:yellowno:1056154087911079966><:yellowno:1056154087911079966><:yellowno:1056154087911079966><:yellowno:1056154087911079966><:yellowno:1056154087911079966><:yellowno:1056154087911079966>"
+	else if (progress < 88) return "<:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287>"
+	else return "<:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287>"
+}
+
 function processData(data) {
 	let organized = data[0].map((item, i) => {
 		return {
@@ -35,10 +62,10 @@ function processData(data) {
 	const processed = organized.map((item) => {
 		let progress = calculateProgress(item.target, item.predicted, item.actual)
 		return {
-			"name": `${item.name} | ${(progress >= 100) ? renderTick(progress) : `${item.priority}`}`,
-			"value": `> Target: **${item.target}**
-			> Predicted Stock: **${item.predicted}**
-			> Actual Stock:** ${item.actual}**
+			"name": `${(progress >= 100) ? renderTick(progress) : renderPriority(item.priority)} ${item.name}`,
+			"value": `
+			> Target: **${item.target}**
+			> Current Stock:** ${item.actual}**
 			> For Procurement: **${item.procure}**
 			_ _
 			**Progress:**
@@ -52,21 +79,7 @@ function processData(data) {
 	return processed
 }
 
-function renderTick(progress) {
-	return (progress >= 100) ? "<a:greentick:1015609031617949728>" : ""
-}
 
-function renderProgressbar(progress) {
-	if (progress == 0) return ""
-	else if (progress < 13) return "<:redno:1056155122952048640>"
-	else if (progress <= 25) return "<:redno:1056155122952048640><:redno:1056155122952048640>"
-	else if (progress < 38) return "<:orangeno:1056154082890485770><:orangeno:1056154082890485770><:orangeno:1056154082890485770>"
-	else if (progress <= 50) return "<:orangeno:1056154082890485770><:orangeno:1056154082890485770><:orangeno:1056154082890485770><:orangeno:1056154082890485770>"
-	else if (progress < 63) return "<:yellowno:1056154087911079966><:yellowno:1056154087911079966><:yellowno:1056154087911079966><:yellowno:1056154087911079966><:yellowno:1056154087911079966>"
-	else if (progress <= 75) return "<:yellowno:1056154087911079966><:yellowno:1056154087911079966><:yellowno:1056154087911079966><:yellowno:1056154087911079966><:yellowno:1056154087911079966><:yellowno:1056154087911079966>"
-	else if (progress < 88) return "<:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287>"
-	else return "<:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287>"
-}
 module.exports = {
 	write(tag, iconId, warNo, color, lastUpdated, data) { 
 		const button = new ActionRowBuilder()
@@ -95,3 +108,18 @@ module.exports = {
 		return message
 	}
 }
+
+//NOTES:
+
+//ONCE PRODUCTION LOG IS IMPLEMENTED, THIS SHOULD BE THE CONTENT OF THE FIELDS
+	// "name": `${item.name} | ${(progress >= 100) ? renderTick(progress) : `${item.priority}`}`,
+	// 		"value": `> Target: **${item.target}**
+	// 		> Predicted Stock: **${item.predicted}**
+	// 		> Actual Stock:** ${item.actual}**
+	// 		> For Procurement: **${item.procure}**
+	// 		_ _
+	// 		**Progress:**
+	// 		${renderProgressbar(progress)} **${progress}%**
+	// 		_ _
+	// 		_ _`,
+	// 		"inline": true

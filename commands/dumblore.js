@@ -8,11 +8,13 @@ module.exports = {
 		.addSubcommand(subcommand =>
 			subcommand
 				.setName('count')
-				.setDescription('Shows the number of times Dumblore got called Dumbledore.'))
+				.setDescription('Shows the number of times Dumblore got called Dumbledore.')
+		)
 		.addSubcommand(subcommand =>
 			subcommand
 				.setName('add')
-				.setDescription('Increase the count by 1.')),
+				.setDescription('Increase the count by 1.')
+		),
 	async execute(interaction) {		
 		const tag = await Tag.findOne({
 			where: {

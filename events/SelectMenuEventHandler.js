@@ -4,7 +4,7 @@ const TransferItemModal = require('../components/modals/ProductionTransferLogMod
 module.exports = {
 	type: 'interactionCreate',
 	async execute(interaction) {
-		if (!interaction.isSelectMenu()) return
+		if (!interaction.isStringSelectMenu()) return
 
 		console.log(interaction)
 
