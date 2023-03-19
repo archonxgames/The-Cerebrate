@@ -13,6 +13,10 @@ const model = sequelize.define('DashboardSetting', {
 		type: DataTypes.STRING,
 		allowNull: true
 	},
+	dashboardChannelId: {
+		type: DataTypes.STRING,
+		allowNull: true
+	},
 	dashboardMessageId: {
 		type: DataTypes.STRING,
 		allowNull: true

@@ -1,9 +1,22 @@
+const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders')
+const { ButtonStyle } = require('discord.js')
+
 function calculateProgress(target, predicted, actual) {
-	return Math.round(((actual > predicted) ? actual : predicted) / target)
+	var _target = (typeof target == "string") ? parseInt(target) : target
+	var _predicted = (typeof predicted == "string") ? parseInt(predicted) : predicted
+	var _actual = (typeof actual == "string") ? parseInt(actual) : actual
+	if (_target > 0) {
+		var progress = Math.round((((_actual > _predicted) ? _actual : _predicted) / _target) * 100)
+		return (progress > 100) ? 100 : progress
+	}
+	if (_actual > 0 || _predicted > 0) {
+		return 100
+	}
+	return 0
 }
 
 function processData(data) {
-	let processed = data[0].map((item, i) => {
+	let organized = data[0].map((item, i) => {
 		return {
 				name: item,
 				priority: data[1][i],
@@ -14,30 +27,38 @@ function processData(data) {
 		}
 	})
 
-	processed.map((item) => {
+	//prune empty items
+	organized = organized.filter((item) => {
+		return item.name != ""
+	})
+
+	const processed = organized.map((item) => {
 		let progress = calculateProgress(item.target, item.predicted, item.actual)
 		return {
-			"name": `${item.name} ${renderTick(item.progress)}`,
-			"value": `> Target: **${item.target}**\n
-			> Predicted Stock: **${item.predicted}**\n
-			> Actual Stock:** ${item.actual}**\n
-			> For Procurement: **${item.procure}**\n
-			_ _\n
-			**Progress:**\n
-			${renderProgressbar(progress)} **${progress}%**\n
-			_ _\n
+			"name": `${item.name} | ${(progress >= 100) ? renderTick(progress) : `${item.priority}`}`,
+			"value": `> Target: **${item.target}**
+			> Predicted Stock: **${item.predicted}**
+			> Actual Stock:** ${item.actual}**
+			> For Procurement: **${item.procure}**
+			_ _
+			**Progress:**
+			${renderProgressbar(progress)} **${progress}%**
+			_ _
 			_ _`,
 			"inline": true
 		}
 	})
+
+	return processed
 }
 
 function renderTick(progress) {
-	return (progress >= 100) ? " <a:greentick:1015609031617949728>" : ""
+	return (progress >= 100) ? "<a:greentick:1015609031617949728>" : ""
 }
 
 function renderProgressbar(progress) {
-	if (progress < 13) return "<:redno:1056155122952048640>"
+	if (progress == 0) return ""
+	else if (progress < 13) return "<:redno:1056155122952048640>"
 	else if (progress <= 25) return "<:redno:1056155122952048640><:redno:1056155122952048640>"
 	else if (progress < 38) return "<:orangeno:1056154082890485770><:orangeno:1056154082890485770><:orangeno:1056154082890485770>"
 	else if (progress <= 50) return "<:orangeno:1056154082890485770><:orangeno:1056154082890485770><:orangeno:1056154082890485770><:orangeno:1056154082890485770>"
@@ -46,21 +67,31 @@ function renderProgressbar(progress) {
 	else if (progress < 88) return "<:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287>"
 	else return "<:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287><:limeno:1056154079337906287>"
 }
-
 module.exports = {
-	write(tag = "SAF", iconId = "<:SAF1:1024375368712466482>", warNo, color = "5814783", lastUpdated, data) { return {
-		"content": null,
-		"embeds": [
-			{
-				"title": `${iconId} **${tag} War ${warNo} Logistics Dashboard** ${iconId}`,
-				"color": `${color}`,
-				"fields": processData(data),
-				"footer": {
-					"text": "Last Updated"
-				},
-				"timestamp": `${lastUpdated}`
-			}
-		],
-		"attachments": []
-	}}
+	write(tag, iconId, warNo, color, lastUpdated, data) { 
+		const button = new ActionRowBuilder()
+			.addComponents(
+				new ButtonBuilder()
+					.setCustomId('logiDashboardRefresh')
+					.setLabel('Refresh')
+					.setStyle(ButtonStyle.Primary)
+			)
+		let message = {
+			"content": null,
+			"embeds": [
+				{
+					"title": `${iconId} **${tag} War ${warNo} Logistics Dashboard** ${iconId}`,
+					"color": color,
+					"fields": processData(data),
+					"footer": {
+						"text": "Last Updated"
+					},
+					"timestamp": lastUpdated
+				}
+			],
+			"components": [button],
+			"attachments": []
+		}
+		return message
+	}
 }
