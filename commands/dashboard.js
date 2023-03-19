@@ -23,7 +23,7 @@ module.exports = {
 			case 'deploy':
 				return await require('./dashboard/deploy').execute(interaction)
 			case 'refresh':
-				return await require('./production/refresh').execute(interaction)
+				return await require('./dashboard/refresh').execute(interaction)
 		}
 	},
 };
