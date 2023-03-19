@@ -1,4 +1,4 @@
-const RefreshHandler = require('../../handlers/dashboard/LogiDashboardRefreshHandler')
+const LogiDashboardRefreshHandler = require('../../handlers/dashboards/LogiDashboardRefreshHandler')
 
 module.exports = {
 	async execute(interaction) {
@@ -6,11 +6,8 @@ module.exports = {
 		await interaction.deferReply({ ephemeral: true })
 
 		try {
-			//Get the interaction data
-			let guildId = interaction.guildId
-
 			//Refresh the dashboard
-			await RefreshHandler.execute(interaction)
+			await LogiDashboardRefreshHandler.execute(interaction)
 		} catch (error) {
 			console.error('ERROR - refresh.js - Error executing command\n', error)
 		}
