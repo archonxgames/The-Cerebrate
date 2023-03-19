@@ -19,12 +19,12 @@
   },
   "scripts": {
     "start": "node .",
-    "update-global": "node deploy-commands-global",
-    "update-local": "node deploy-commands-local",
+    "deploy-global": "node deploy-commands-global",
+    "deploy-local": "node deploy-commands-local",
 		"sync": "node sync-database-models",
 		"reauth": "node reauth",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "DumbloreAsync",
+  "license": "All rights reserved."
 }

@@ -11,7 +11,7 @@ module.exports = {
 		}
 		
 		//Defer the reply
-		await interaction.deferReply()
+		await interaction.deferReply({ ephemeral: true })
 
 		//Get the interaction data
 		let guildId = interaction.guildId
@@ -59,7 +59,7 @@ module.exports = {
 		}
 
 		console.log(`INFO - Stockpile successfully initialized`)
-		return await interaction.editReply({
+		await interaction.channel.send({
 			content: "The stockpile dashboard has been successfully created. To access the stockpile sheet, click on the link below.\n_ _",
 			embeds: [
 				{
@@ -70,5 +70,7 @@ module.exports = {
 				}
 			]
 		})
+
+		return await interaction.reply({content: "Command executed successfully."})
 	}
 }

@@ -1,7 +1,5 @@
 module.exports = {
-	type: 'messageCreate',
 	async execute(message) {
-		console.log(message)
 		//increase dumbledore count if a non-bot user says dumbledore
 		if (!message.author.bot && message.content.toLowerCase().includes('dumbledore')) {
 			const Tag = require('../data/models/Tag').data

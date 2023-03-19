@@ -3,9 +3,6 @@ const foxhole = require('../../utils/FoxholeAPIUtils')
 
 module.exports = {
 	async execute(interaction) {
-		//Defer the reply
-		await interaction.deferReply()
-
 		//Get the interaction data
 		const guildId = interaction.guildId
 		let war = interaction.options.getInteger('war')
@@ -18,7 +15,7 @@ module.exports = {
 				war = warData.warNumber
 			} catch (error) {
 				console.error('ERROR - sheet.js - Error obtaining current war data:\n', error)
-				return await interaction.editReply({content: 'There was an error while executing this command!', ephemeral: true})
+				return await interaction.reply({content: 'There was an error while executing this command!', ephemeral: true})
 			}
 		}
 
@@ -28,7 +25,7 @@ module.exports = {
 				where: { guildId, war }
 			})
 	
-			return await interaction.editReply({
+			return await interaction.reply({
 				embeds: [
 				{
 					title: `War ${war} Stockpile Sheet`,
@@ -39,7 +36,7 @@ module.exports = {
 			]})
 		} catch (error) {
 			console.error('ERROR - sheet.js - Error retrieving google sheet from database\n', error)
-			return await interaction.editReply({content: 'There was an error while executing this command!', ephemeral: true})
+			return await interaction.reply({content: 'There was an error while executing this command!', ephemeral: true})
 		}
 	}
 }
