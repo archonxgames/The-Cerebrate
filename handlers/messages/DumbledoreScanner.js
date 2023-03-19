@@ -2,7 +2,7 @@ module.exports = {
 	async execute(message) {
 		//increase dumbledore count if a non-bot user says dumbledore
 		if (!message.author.bot && message.content.toLowerCase().includes('dumbledore')) {
-			const Tag = require('../data/models/Tag').data
+			const Tag = require('../../data/models/Tag').data
 			const tag = await Tag.findOne({
 				where: {
 					tag: 'dumbledore'
