@@ -1,15 +1,14 @@
 const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders')
 const { ButtonStyle } = require('discord.js')
 
-function calculateProgress(target, predicted, actual) {
+function calculateProgress(target, actual) {
 	var _target = (typeof target == "string") ? parseInt(target) : target
-	var _predicted = (typeof predicted == "string") ? parseInt(predicted) : predicted
 	var _actual = (typeof actual == "string") ? parseInt(actual) : actual
 	if (_target > 0) {
-		var progress = Math.round((((_actual > _predicted) ? _actual : _predicted) / _target) * 100)
+		var progress = Math.round((_actual / _target) * 100)
 		return (progress > 100) ? 100 : progress
 	}
-	if (_actual > 0 || _predicted > 0) {
+	if (_actual > 0) {
 		return 100
 	}
 	return 0
@@ -45,12 +44,12 @@ function renderProgressbar(progress) {
 function processData(data) {
 	let organized = data[0].map((item, i) => {
 		return {
-				name: item,
-				priority: data[1][i],
-				target: data[2][i],
-				predicted: data[3][i],
-				actual: data[4][i],
-				procure: data[5][i]
+			name: item,
+			priority: data[1][i],
+			target: data[2][i],
+			actual: data[3][i],
+			procure: data[4][i],
+			mpf: data[5][i]
 		}
 	})
 
@@ -60,13 +59,14 @@ function processData(data) {
 	})
 
 	const processed = organized.map((item) => {
-		let progress = calculateProgress(item.target, item.predicted, item.actual)
+		let progress = calculateProgress(item.target, item.actual)
 		return {
 			"name": `${(progress >= 100) ? renderTick(progress) : renderPriority(item.priority)} ${item.name}`,
 			"value": `
 			> Target: **${item.target}**
 			> Current Stock:** ${item.actual}**
 			> For Procurement: **${item.procure}**
+			> MPF Orders Left: **${item.mpf}**
 			_ _
 			**Progress:**
 			${renderProgressbar(progress)} **${progress}%**
@@ -108,18 +108,3 @@ module.exports = {
 		return message
 	}
 }
-
-//NOTES:
-
-//ONCE PRODUCTION LOG IS IMPLEMENTED, THIS SHOULD BE THE CONTENT OF THE FIELDS
-	// "name": `${item.name} | ${(progress >= 100) ? renderTick(progress) : `${item.priority}`}`,
-	// 		"value": `> Target: **${item.target}**
-	// 		> Predicted Stock: **${item.predicted}**
-	// 		> Actual Stock:** ${item.actual}**
-	// 		> For Procurement: **${item.procure}**
-	// 		_ _
-	// 		**Progress:**
-	// 		${renderProgressbar(progress)} **${progress}%**
-	// 		_ _
-	// 		_ _`,
-	// 		"inline": true

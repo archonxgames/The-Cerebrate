@@ -20,7 +20,7 @@ module.exports = {
 		//Obtain current war data
 		try {
 			let warData = await foxhole.getWarData()
-			war = warData.warNumber
+			var war = warData.warNumber
 		} catch (error) {
 			console.error('ERROR - RefreshHandler.js - Error obtaining current war data\n', error)
 			return await interaction.reply({content: 'There was an error while executing this command!', ephemeral: true})
@@ -33,7 +33,7 @@ module.exports = {
 			})
 
 			if (result != null) {
-				sheetId = result.sheetId
+				var sheetId = result.sheetId
 			} else {
 				return await interaction.reply({content: 'Cannot find a stockpile sheet for the current war. Please use the `/stockpile init` command to create a stockpile sheet.', ephemeral: true})
 			}
@@ -54,7 +54,7 @@ module.exports = {
 		//Update Logi Dashboard message to channel
 		try {
 			//Get dashboard settings
-			dashboardSettings = await DashboardSetting.findOne({
+			var dashboardSettings = await DashboardSetting.findOne({
 				where: { guildId }
 			})
 			
@@ -64,7 +64,7 @@ module.exports = {
 			}
 
 			//Get guild settings
-			guildSettings = await GuildSetting.findOne({
+			var guildSettings = await GuildSetting.findOne({
 				where: { guildId }
 			})
 			
