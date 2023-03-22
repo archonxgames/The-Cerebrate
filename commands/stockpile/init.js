@@ -1,5 +1,6 @@
 const { PermissionFlagsBits } = require('discord.js')
 const StockpileSheet = require('../../data/models/StockpileSheet').data
+const GuildSetting = require('../../data/models/GuildSetting').data
 const foxhole = require('../../utils/FoxholeAPIUtils')
 const stockpile = require('../../utils/StockpileUtils')
 
@@ -24,7 +25,22 @@ module.exports = {
 			console.error('ERROR - init.js - Error obtaining current war data\n', error)
 			return await interaction.editReply({content: 'There was an error while executing this command!', ephemeral: true})
 		}
-		
+
+		try {
+			//Obtain guild settings
+			var guildSettings = await GuildSetting.findOne({
+				where: { guildId }
+			})
+			
+			//Return a message to set-up the regiment tag if guildSettings or tag does not exist
+			if(guildSettings == null || guildSettings.tag == null) {
+				return await interaction.editReply({content: 'You have not yet set your regiment tag. Please set your regiment tag using `/regiment tag` before executing this command again.'})
+			}
+		} catch (error) {
+			console.error('ERROR - init.js - Error obtaining current war data\n', error)
+			return await interaction.editReply({content: 'There was an error while executing this command!', ephemeral: true})
+		}
+
 		//Check for duplicate entries in the database
 		try {
 			const result = await StockpileSheet.findOne({
@@ -32,7 +48,7 @@ module.exports = {
 			})
 			
 			if (result != null) {
-				return await interaction.editReply({content: 'You have already initialized a stockpile dashboard for this war. Please use the `/stockpile sheet` to access the corresponding stockpile sheet.', ephemeral: true})
+				return await interaction.editReply({content: 'You have already initialized a stockpile dashboard for this war. Please use the `/stockpile sheet` command to access the corresponding stockpile sheet.', ephemeral: true})
 			}
 		} catch (error) {
 			console.error('ERROR - init.js - Error checking duplicate entries in database\n', error)
@@ -41,7 +57,7 @@ module.exports = {
 
 		//Generate a new google sheet based on current war data
 		try {
-			var sheetId = await stockpile.createStockpileSheetFromTemplate(warData)
+			var sheetId = await stockpile.createStockpileSheetFromTemplate(warData, guildSettings)
 		} catch (error) {
 			console.error('ERROR - init.js - Error generating google sheet\n', error)
 			return await interaction.editReply({content: 'There was an error while executing this command!', ephemeral: true})
@@ -60,7 +76,7 @@ module.exports = {
 
 		console.log(`INFO - Stockpile successfully initialized`)
 		await interaction.channel.send({
-			content: "The stockpile dashboard has been successfully created. To access the stockpile sheet, click on the link below.\n_ _",
+			content: "The stockpile sheet has been successfully created. To access the stockpile sheet, click on the link below.\n_ _",
 			embeds: [
 				{
 					title: `War ${war} Stockpile Sheet`,
@@ -71,6 +87,6 @@ module.exports = {
 			]
 		})
 
-		return await interaction.reply({content: "Command executed successfully."})
+		return await interaction.editReply({content: "Command executed successfully.", ephemeral: true})
 	}
 }

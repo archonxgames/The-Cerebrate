@@ -25,6 +25,9 @@ module.exports = {
 			} 
 			//Update guild settings if tag is not null
 			else if (tag != null) {
+				if (tag.length > 5) {
+					return await interaction.reply({content: 'The maximum length of the tag is five (5) characters. Please try again.', ephemeral: true})
+				}
 				settings.tag = tag
 				await settings.save()
 			}

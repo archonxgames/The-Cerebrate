@@ -41,7 +41,7 @@ async function saveCredentials(client) {
     type: 'authorized_user',
     client_id: key.client_id,
     client_secret: key.client_secret,
-    refresh_token: client.credentials.refresh_token,
+    refresh_token: client.credentials.refresh_token
   })
   await fs.writeFile(TOKEN_PATH, payload)
 }
@@ -58,7 +58,7 @@ async function authorize() {
 	}
 	client = await authenticate({
 		scopes: SCOPES,
-		keyfilePath: CREDENTIALS_PATH,
+		keyfilePath: CREDENTIALS_PATH
 	})
 	if (client.credentials) {
 		await saveCredentials(client)
@@ -88,7 +88,7 @@ sheets: {
   try {
     const spreadsheet = await service.spreadsheets.create({
       resource,
-      fields: 'spreadsheetId',
+      fields: 'spreadsheetId'
     })
     console.log(`INFO - Spreadsheet ID: ${spreadsheet.data.spreadsheetId}`);
     return spreadsheet.data.spreadsheetId;
@@ -109,7 +109,7 @@ async getValues(spreadsheetId, range) {
 	try {
 		const result = await service.spreadsheets.values.get({
 			spreadsheetId,
-			range,
+			range
 		})
 		const numRows = result.data.values ? result.data.values.length : 0
 		console.log(`INFO - ${numRows} rows retrieved.`)
@@ -136,9 +136,9 @@ async updateValues(spreadsheetId, range, valueInputOption, values) {
 			spreadsheetId,
 			range,
 			valueInputOption,
-			resource,
+			resource
 		})
-		console.log('INFO - %d cells updated.', result.data.updatedCells)
+		console.log(`INFO - updateValues - ${result.data.updatedCells} cells updated.\n`,result)
 		return result
 	} catch (err) {
 		// TODO (Developer) - Handle exception
@@ -147,10 +147,33 @@ async updateValues(spreadsheetId, range, valueInputOption, values) {
 },
 
 /**
+ * Batch Updates values in a Spreadsheet.
+ * @param {string} spreadsheetId The spreadsheet ID.
+ * @param {object[]} data An array of objects comprised of each range to update and a 2d array of values to update.
+ * @param {object} valueInputOption Value update options.
+ * @return {obj} spreadsheet information
+ */
+async batchUpdateValues(spreadsheetId, data, valueInputOption) {
+	const service = google.sheets({version: 'v4', auth: await authorize()})
+	const resource = {data, valueInputOption}
+	try {
+		const result = await service.spreadsheets.values.batchUpdate({
+			spreadsheetId,
+			resource
+		})
+		console.log(`INFO - batchUpdateValues - ${result.data.totalUpdatedCells} cells updated.\n`,result)
+		return result
+	} catch (err) {
+		// TODO (developer) - Handle exception
+		throw err;
+	}
+},
+
+/**
  * Appends values in a Spreadsheet.
  * @param {string} spreadsheetId The spreadsheet ID.
  * @param {string} range The range of values to append.
- * @param {object} valueInputOption Value input options.
+ * @param {object} valueInputOption Value input options (RAW,USER_ENTERED,INPUT_VALUE_OPTION_UNSPECIFIED).
  * @param {(string[])[]} _values A 2d array of values to append.
  * @return {obj} spreadsheet information
  */
@@ -163,9 +186,9 @@ async appendValues(spreadsheetId, range, valueInputOption, values) {
 			spreadsheetId,
 			range,
 			valueInputOption,
-			resource,
+			resource
 		})
-		console.log(`INFO - ${result.data.updates.updatedCells} cells appended.`)
+		console.log(`INFO - appendValues - ${result.data.updates.updatedCells} cells appended.\n`,result)
 		return result
 	} catch (err) {
 		// TODO (developer) - Handle exception
@@ -219,9 +242,9 @@ async shareFileToPublic(fileId) {
 		const result = await service.permissions.create({
 			resource: permission,
 			fileId: fileId,
-			fields: 'id',
+			fields: 'id'
 		});
-		console.log(`INFO - Inserted permission id: ${result.data.id}`);
+		console.log(`INFO - Inserted permission id: ${result.data.id}\n`,result);
 		
 		return result
 	} catch (err) {
