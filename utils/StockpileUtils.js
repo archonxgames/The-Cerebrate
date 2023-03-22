@@ -1,6 +1,14 @@
 const gapi = require('./GoogleAPIUtils')
 const { folderId, templSheetId } = require('../config.json')
 
+async function populateStockpileSheet(spreadsheetId, guildSettings) {
+	const range = 'Settings!C1'
+	const values = [[guildSettings.tag]]
+	const data = await gapi.sheets.updateValues(spreadsheetId, range, 'USER_ENTERED', values)
+
+	return data.data.values
+}
+
 module.exports = {
 	async createStockpileSheetFromTemplate(warData, guildSettings) {
 		//Copy file from template
@@ -8,20 +16,12 @@ module.exports = {
 		let sheetId = await gapi.drive.copyFileToFolder(folderId, templSheetId, title)
 
 		//Populate stockpile sheet with default values from guild settings
-		await this.populateStockpileSheet(sheetId, guildSettings)
+		await populateStockpileSheet(sheetId, guildSettings)
 		
 		//Share the file
 		await gapi.drive.shareFileToPublic(sheetId)
 		
 		return sheetId
-	},
-
-	async populateStockpileSheet(spreadsheetId, guildSettings) {
-		const range = 'Settings!C1'
-		const values = [[guildSettings.tag]]
-		const data = await gapi.sheets.updateValues(spreadsheetId, range, 'USER_ENTERED', values)
-
-		return data.data.values
 	},
 
 	async getLogiDashboardData(sheetId) {
