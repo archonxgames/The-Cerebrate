@@ -8,7 +8,7 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBit
 
 client.commands = new Collection()
 
-console.log('INFO - Loading commands.')
+console.log('INFO - Loading commands')
 const commandsPath = path.join(__dirname, 'commands')
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'))
 
