@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders')
+const { SlashCommandBuilder } = require('discord.js')
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -23,6 +23,7 @@ module.exports = {
 						.setName('tag')
 						.setDescription('The regiment tag.')
 						.setRequired(false)
+						.setMaxLength(5)
 		))
 		.addSubcommand(subcommand =>
 			subcommand

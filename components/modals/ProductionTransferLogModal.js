@@ -1,4 +1,4 @@
-const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders')
+const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('discord.js')
 const { TextInputStyle } = require('discord.js')
 
 const modal = new ModalBuilder()

@@ -1,4 +1,4 @@
-const { ActionRowBuilder, SelectMenuBuilder } = require('@discordjs/builders')
+const { ActionRowBuilder, SelectMenuBuilder } = require('discord.js')
 const { PermissionFlagsBits } = require('discord.js')
 const { clientId } = require('../../config.json')
 

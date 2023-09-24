@@ -1,8 +1,7 @@
 const foxhole = require('../../utils/FoxholeAPIUtils')
-const dashboard = require('../../components/dashboards/LogiDashboard')
+const dashboard = require('../../components/dashboards/StockpileCodeDashboard')
 const GuildSetting = require('../../data/models/GuildSetting').data
 const StockpileUtils = require('../../utils/StockpileUtils')
-const Logger = require('../../utils/Logger')
 const StockpileSheet = require('../../data/models/StockpileSheet').data
 
 module.exports = {
@@ -18,7 +17,6 @@ module.exports = {
 
 		//Get the latest stockpile sheet
 		try {
-			var guildId = dashboardSettings.guildId
 			const result = await StockpileSheet.findOne({
 				where: { guildId, war }
 			})
@@ -30,7 +28,7 @@ module.exports = {
 			}
 		} catch (error) {
 			console.error('ERROR - LogiDashboardRefreshHandler.js - Error retrieving google sheet id from database\n', error)
-			return await interaction.reply({content: 'There was an error while executing this command!', ephemeral: true})
+			throw(error)
 		}
 
 		//Get the logi dashboard data
@@ -39,7 +37,7 @@ module.exports = {
 			console.log('INFO - LogiDashboardRefreshHandler.js - Retrieved data from stockpile sheet\n', data)
 		} catch (error) {
 			console.error('ERROR - LogiDashboardRefreshHandler.js - Error retrieving logi dashboard data from stockpile sheet\n', error)
-			return await interaction.reply({content: 'There was an error while executing this command!', ephemeral: true})
+			throw(error)
 		}
 
 		//Update Logi Dashboard message to channel
@@ -56,19 +54,16 @@ module.exports = {
 
 			let tag = (guildSettings.tag != null) ? guildSettings.tag : "SAF"
 			let iconId = (guildSettings.iconId != null) ? guildSettings.iconId : "<:SAF1:1024375368712466482>"
-			// let color = (dashboardSettings.color != null) ? dashboardSettings.color : 0xa7ba6c
-			let color = 0xa7ba6c
 			let timestamp = new Date(Date.now()).toISOString()
-			let message = dashboard.write(tag, iconId, war, color, timestamp, data)
+			let message = dashboard.write(tag, iconId, war, timestamp, data)
 
-			Logger.info('LogiDashboardRefreshHandler.js','refresh','Forwarding updated dashboard to interaction')
 			return {
 				message: message,
-				content: 'Logi dashboard has been refreshed successfully.'
+				content: 'Stockpile code dashboard has been refreshed successfully.'
 			}
 		} catch (error) {
 			console.error('ERROR - LogiDashboardRefreshHandler.js - Error sending reply to logi dashboard channel\n', error)
-			return await interaction.editReply({content: 'There was an error while executing this command!', ephemeral: true})
+			throw(error)
 		}
 	}
 }

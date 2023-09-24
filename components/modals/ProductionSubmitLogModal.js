@@ -1,4 +1,4 @@
-const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders')
+const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('discord.js')
 const { TextInputStyle } = require('discord.js')
 const gapi = require('../../utils/GoogleAPIUtils')
 const foxhole = require('../../utils/FoxholeAPIUtils')
@@ -70,7 +70,7 @@ async function execute(interaction) {
 	//Append production log to gsheet
 	let result = null
 	try {
-		const result = await StockpileSheet.findOne({
+		result = await StockpileSheet.findOne({
 			where: { guildId, war }
 		})
 
@@ -103,7 +103,7 @@ async function execute(interaction) {
 			await channel.send({ content: `<@${user.id}> has submitted **${amount} ${unit.toLowerCase() + ((amount > 1) ? 's' : '')}** of **${item}** to **${stockpile}**.` })
 		}
 		if (result == null) {
-			return await interaction.editReply({content: 'Your submission was received successfully. Thank you for your service!.\nNo stockpile sheet exists to save the production log to. To create a stockpile sheet, enter the `/stockpile init` command.', ephemeral: true})
+			return await interaction.editReply({content: 'Your submission was received successfully. Thank you for your service!\nNo stockpile sheet exists to save the production log to. To create a stockpile sheet, enter the `/stockpile init` command.', ephemeral: true})
 		}
 		return await interaction.editReply({ content: 'Your submission was received successfully. Thank you for your service!', ephemeral: true })
 	} catch (error) {

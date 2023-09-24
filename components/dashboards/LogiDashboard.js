@@ -1,4 +1,4 @@
-const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders')
+const { ActionRowBuilder, ButtonBuilder } = require('discord.js')
 const { ButtonStyle } = require('discord.js')
 
 function calculateProgress(target, actual) {
@@ -59,6 +59,7 @@ function processData(data) {
 	})
 
 	const processed = organized.map((item) => {
+		console.log(item)
 		let progress = calculateProgress(item.target, item.actual)
 		return {
 			"name": `${(progress >= 100) ? renderTick(progress) : renderPriority(item.priority)} ${item.name}`,

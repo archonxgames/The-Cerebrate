@@ -21,7 +21,7 @@ for (const file of commandFiles) {
 }
 
 console.log('INFO - Initializing Event Handlers')
-const eventsPath = path.join(__dirname, 'events')
+const eventsPath = path.join(__dirname, '/handlers/events')
 const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'))
 
 for (const file of eventFiles) {

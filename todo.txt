@@ -1,0 +1,2 @@
+- Automatic War Banner message on multiple channels every start of war
+- Add dashboard controls for production log submissions 

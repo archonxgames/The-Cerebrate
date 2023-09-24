@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "@discordjs/builders": "^0.15.0",
     "@discordjs/rest": "^0.5.0",
     "@google-cloud/local-auth": "^2.1.0",
     "axios": "^1.1.3",
@@ -14,15 +13,12 @@
   "version": "1.0.0",
   "description": "The logistical hivemind of Foxhole's SAF clan, monitoring and managing logistics for the war.",
   "main": "index.js",
-  "devDependencies": {
-    "eslint": "^8.19.0"
-  },
   "scripts": {
     "start": "node .",
     "deploy-global": "node deploy-commands-global",
     "deploy-local": "node deploy-commands-local",
-		"sync": "node sync-database-models",
-		"reauth": "node reauth",
+    "sync": "node sync-database-models",
+    "reauth": "node reauth",
     "test": "node test"
   },
   "author": "DumbloreAsync",

@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder } = require('discord.js');
 const gapi = require('../../utils/GoogleAPIUtils')
 const { spreadsheetId } = require('../../config.json')
 module.exports = {

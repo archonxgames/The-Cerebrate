@@ -1,5 +1,5 @@
-const SubmitItemModal = require('../components/modals/ProductionSubmitLogModal')
-const TransferItemModal = require('../components/modals/ProductionTransferLogModal')
+const SubmitItemModal = require('../../components/modals/ProductionSubmitLogModal')
+const TransferItemModal = require('../../components/modals/ProductionTransferLogModal')
 
 module.exports = {
 	type: 'interactionCreate',

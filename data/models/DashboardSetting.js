@@ -9,25 +9,18 @@ const model = sequelize.define('DashboardSetting', {
 		allowNull: false,
 		primaryKey: true
 	},
-	logChannelId: {
+	type: {
 		type: DataTypes.STRING,
-		allowNull: true
+		allowNull: false
 	},
 	dashboardChannelId: {
 		type: DataTypes.STRING,
-		allowNull: true
+		allowNull: false
 	},
 	dashboardMessageId: {
 		type: DataTypes.STRING,
-		allowNull: true
-	},
-	webhookId: {
-		type: DataTypes.STRING,
-		allowNull: true
-	},
-	webhookToken: {
-		type: DataTypes.STRING,
-		allowNull: true
+		allowNull: false,
+		primaryKey: true
 	}
 })
 
