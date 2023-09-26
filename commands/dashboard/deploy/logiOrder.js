@@ -3,6 +3,7 @@ const GuildSetting = require('../../../data/models/GuildSetting').data
 const DashboardSetting = require('../../../data/models/DashboardSetting').data
 const StockpileSheet = require('../../../data/models/StockpileSheet').data
 const foxhole = require('../../../utils/FoxholeAPIUtils')
+const Logger = require('../../../utils/Logger')
 const stockpile = require('../../../utils/StockpileUtils')
 
 module.exports = {
@@ -16,7 +17,7 @@ module.exports = {
 			let warData = await foxhole.getWarData()
 			var war = warData.warNumber
 		} catch (error) {
-			console.error('ERROR - logiOrder.js - Error obtaining current war data\n', error)
+			Logger.error('logiOrder.js','execute','Error obtaining current war data', error)
 			return await interaction.editReply({content: 'There was an error while executing this command!', ephemeral: true})
 		}
 
@@ -32,16 +33,16 @@ module.exports = {
 				return await interaction.editReply({content: 'Cannot find a stockpile sheet for the current war. Please use the `/stockpile init` command to create a stockpile sheet.', ephemeral: true})
 			}
 		} catch (error) {
-			console.error('ERROR - logiOrder.js - Error retrieving google sheet id from database\n', error)
+			Logger.error('logiOrder.js','execute','Error retrieving google sheet id from database', error)
 			return await interaction.editReply({content: 'There was an error while executing this command!', ephemeral: true})
 		}
 
 		//Get the logi dashboard data
 		try {
 			var data = await stockpile.getLogiDashboardData(sheetId)
-			console.log('INFO - logiOrder.js - Retrieved data from stockpile sheet\n', data)
+			Logger.debug('logiOrder.js','execute','Retrieved data from stockpile sheet', data)
 		} catch (error) {
-			console.error('ERROR - logiOrder.js - Error retrieving logi dashboard data from stockpile sheet\n', error)
+			Logger.error('logiOrder.js','execute','Error retrieving logi dashboard data from stockpile sheet', error)
 			return await interaction.editReply({content: 'There was an error while executing this command!', ephemeral: true})
 		}
 
@@ -63,7 +64,7 @@ module.exports = {
 			let timestamp = new Date(Date.now()).toISOString()
 
 			let message = (channel != null) ? 
-				await channel.send(dashboard.write(tag, iconId, warNo, color, timestamp, data))
+				await channel.send(dashboard.write(tag, iconId, war, color, timestamp, data))
 			:
 				await interaction.channel.send(dashboard.write(tag, iconId, war, color, timestamp, data))
 						

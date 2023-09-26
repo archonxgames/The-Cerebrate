@@ -28,5 +28,11 @@ module.exports = {
 		const data = await gapi.sheets.getValues(sheetId, `'Logi Order'!E5:V10`)
 
 		return data.data.values
+	},
+
+	async getStockpileCodes(sheetId) {
+		const data = await gapi.sheets.getValues(sheetId, `'Settings'!H1:4`)
+
+		return data.data.values
 	}
 }

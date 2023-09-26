@@ -2,6 +2,7 @@ const foxhole = require('../../utils/FoxholeAPIUtils')
 const dashboard = require('../../components/dashboards/StockpileCodeDashboard')
 const GuildSetting = require('../../data/models/GuildSetting').data
 const StockpileUtils = require('../../utils/StockpileUtils')
+const Logger = require('../../utils/Logger')
 const StockpileSheet = require('../../data/models/StockpileSheet').data
 
 module.exports = {
@@ -11,12 +12,13 @@ module.exports = {
 			let warData = await foxhole.getWarData()
 			var war = warData.warNumber
 		} catch (error) {
-			console.error('ERROR - LogiDashboardRefreshHandler.js - Error obtaining current war data\n', error)
+			Logger.error('StockpileCodeDashboardRefreshHandler.js','refresh','Error obtaining current war data', error)
 			throw(error)
 		}
 
 		//Get the latest stockpile sheet
 		try {
+			var guildId = dashboardSettings.guildId
 			const result = await StockpileSheet.findOne({
 				where: { guildId, war }
 			})
@@ -27,20 +29,20 @@ module.exports = {
 				return await interaction.reply({content: 'Cannot find a stockpile sheet for the current war. Please use the `/stockpile init` command to create a stockpile sheet.', ephemeral: true})
 			}
 		} catch (error) {
-			console.error('ERROR - LogiDashboardRefreshHandler.js - Error retrieving google sheet id from database\n', error)
+			Logger.error('StockpileCodeDashboardRefreshHandler.js','refresh','Error retrieving google sheet id from database', error)
 			throw(error)
 		}
 
 		//Get the logi dashboard data
 		try {
-			var data = await StockpileUtils.getLogiDashboardData(sheetId)
-			console.log('INFO - LogiDashboardRefreshHandler.js - Retrieved data from stockpile sheet\n', data)
+			var data = await StockpileUtils.getStockpileCodes(sheetId)
+			console.log('INFO - StockpileCodeDashboardRefreshHandler.js - Retrieved data from stockpile sheet\n', data)
 		} catch (error) {
-			console.error('ERROR - LogiDashboardRefreshHandler.js - Error retrieving logi dashboard data from stockpile sheet\n', error)
+			Logger.error('StockpileCodeDashboardRefreshHandler.js','refresh','Error retrieving logi dashboard data from stockpile sheet', error)
 			throw(error)
 		}
 
-		//Update Logi Dashboard message to channel
+		//Update Stockpile Code Dashboard message to channel
 		try {
 			//Get guild settings
 			var guildSettings = await GuildSetting.findOne({
@@ -52,17 +54,18 @@ module.exports = {
 				guildSettings = await GuildSetting.create({guildId})
 			}
 
-			let tag = (guildSettings.tag != null) ? guildSettings.tag : "SAF"
-			let iconId = (guildSettings.iconId != null) ? guildSettings.iconId : "<:SAF1:1024375368712466482>"
+			let tag = (guildSettings.tag != null) ? guildSettings.tag : 'SAF'
+			let iconId = (guildSettings.iconId != null) ? guildSettings.iconId : '<:SAF1:1024375368712466482>'
+			let color = 0xa7ba6c
 			let timestamp = new Date(Date.now()).toISOString()
-			let message = dashboard.write(tag, iconId, war, timestamp, data)
+			let message = dashboard.write(tag, iconId, war, color, timestamp, data)
 
 			return {
 				message: message,
 				content: 'Stockpile code dashboard has been refreshed successfully.'
 			}
 		} catch (error) {
-			console.error('ERROR - LogiDashboardRefreshHandler.js - Error sending reply to logi dashboard channel\n', error)
+			Logger.error('StockpileCodeDashboardRefreshHandler.js','refresh','Error sending reply to logi dashboard channel', error)
 			throw(error)
 		}
 	}

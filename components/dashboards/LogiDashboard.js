@@ -26,6 +26,8 @@ function renderPriority(priority) {
 			return '<:PRIOMED:1061897963191943229>'
 		case "LOW":
 			return '<:PRIOLOW:1061897988429066322>'
+		default:
+			return ''
 	}
 }
 
@@ -88,13 +90,13 @@ module.exports = {
 				new ButtonBuilder()
 					.setCustomId('logiDashboardRefresh')
 					.setLabel('Refresh')
-					.setStyle(ButtonStyle.Primary)
+					.setStyle(ButtonStyle.Success)
 			)
 		let message = {
-			"content": null,
+			"content": `# <[${iconId}]> **${tag} War ${warNo} Logistics Dashboard** <[${iconId}]>`,
 			"embeds": [
 				{
-					"title": `${iconId} **${tag} War ${warNo} Logistics Dashboard** ${iconId}`,
+					"title": null,
 					"color": color,
 					"fields": processData(data),
 					"footer": {

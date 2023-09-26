@@ -12,7 +12,7 @@ function processData(data) {
 			let value = stockpiles.get(region)
 			let append = {
 					name: stockpile,
-					code: data[3][index]
+					code: (data[3][index] != null) ? data[3][index] : '--'
 			}
 			if (value === undefined) {
 					let towns = new Map()
@@ -30,23 +30,23 @@ function processData(data) {
 }
 
 function stringifyStockpiles(stockpiles) {
-	let stockpileString = `${stockpiles[0].name}: ||${stockpiles[0].code}||`
-	for(i = 1; i < stockpiles.length(); i++) {
-		stockpileString += `${stockpiles[i].name}: ||${stockpiles[i].code}||`
+	let stockpileString = `${stockpiles[0].name}: ${(stockpiles[0].code == '--') ? 'Not Found' : `||${stockpiles[0].code}||`}\n\n`
+	for(i = 1; i < stockpiles.length; i++) {
+		stockpileString += `${stockpiles[i].name}: ${(stockpiles[i].code == '--') ? 'Not Found' : `||${stockpiles[i].code}||`}\n\n`
 	}
 
 	return stockpileString
 }
 
-function generateEmbeds(data, lastUpdated) {
+function generateEmbeds(data, color, lastUpdated) {
 	let regions = processData(data)
 	let embeds = Array.from(regions, ([region, towns]) => (
     {
-			title: region,
-			color: "6585891",
+			title: `${region}\n_ _`,
+			color: color,
 			fields: Array.from(towns, ([town, stockpiles]) => ({
-		    name: town,
-		    value: stringifyStockpiles(stockpiles)
+		    name: `${town}\n_ _`,
+		    value: `${stringifyStockpiles(stockpiles)}_ _`
 		})),
 			"timestamp": lastUpdated
 		}
@@ -56,17 +56,17 @@ function generateEmbeds(data, lastUpdated) {
 }
 
 module.exports = {
-	write(tag, iconId, warNo, lastUpdated, data) { 
+	write(tag, iconId, warNo, color, lastUpdated, data) { 
 		const button = new ActionRowBuilder()
 			.addComponents(
 				new ButtonBuilder()
 					.setCustomId('stockpileCodeDashboardRefresh')
 					.setLabel('Refresh')
-					.setStyle(ButtonStyle.Primary)
+					.setStyle(ButtonStyle.Success)
 			)
 		let message = {
-			"content": `${iconId} **${tag} War ${warNo} Stockpile Codes** ${iconId}`,
-			"embeds": generateEmbeds(data, lastUpdated),
+			"content": `# ${iconId} **${tag} War ${warNo} Stockpile Codes** ${iconId}\n\nPlease **DO NOT SHARE** stockpile codes outside of the Regiment unless approved by an Officer.\n_ _`,
+			"embeds": generateEmbeds(data, color, lastUpdated),
 			"components": [button],
 			"attachments": []
 		}

@@ -4,10 +4,14 @@ const { Sequelize, DataTypes } = require('sequelize')
 const sequelize = new Sequelize(`mysql://${mysqlUser}:${mysqlPass}@${mysqlHost}:${mysqlPort}/${mysqlDB}`)
 
 const model = sequelize.define('DashboardSetting', {
-	guildId: {
+	dashboardMessageId: {
 		type: DataTypes.STRING,
 		allowNull: false,
 		primaryKey: true
+	},
+	guildId: {
+		type: DataTypes.STRING,
+		allowNull: false,
 	},
 	type: {
 		type: DataTypes.STRING,
@@ -16,11 +20,6 @@ const model = sequelize.define('DashboardSetting', {
 	dashboardChannelId: {
 		type: DataTypes.STRING,
 		allowNull: false
-	},
-	dashboardMessageId: {
-		type: DataTypes.STRING,
-		allowNull: false,
-		primaryKey: true
 	}
 })
 

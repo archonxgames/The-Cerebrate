@@ -10,6 +10,8 @@ module.exports = {
 			//Dashboard refresh
 			dashboards.refreshAll(client)
 			
+			//Stockpile Sheet Creation
+			// WarStateWatcher.checkForUpdates()
 		}, 900000)
 	}
 }
