@@ -111,8 +111,8 @@ module.exports = {
 				let guildId = dashboardSetting.guildId
 				let channel = await client.guilds.cache.get(guildId).channels.cache.get(dashboardSetting.dashboardChannelId)
 				let message = await channel.messages.fetch(dashboardSetting.dashboardMessageId)
-				let response = await handleRefresh(dashboardSetting)
-				return await message.edit(response)
+				let result = await handleRefresh(dashboardSetting)
+				return await message.edit(result.message)
 			})
 		} catch(error) {
 			Logger.error('DashboardRefreshHandler.js', 'refreshAll', 'Error refreshing all dashboards', error)

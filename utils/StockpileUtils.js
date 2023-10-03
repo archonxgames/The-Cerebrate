@@ -25,13 +25,13 @@ module.exports = {
 	},
 
 	async getLogiDashboardData(sheetId) {
-		const data = await gapi.sheets.getValues(sheetId, `'Logi Order'!E5:V10`)
+		const data = await gapi.sheets.getValues(sheetId, `'Logi Order'!E5:S10`)
 
 		return data.data.values
 	},
 
 	async getStockpileCodes(sheetId) {
-		const data = await gapi.sheets.getValues(sheetId, `'Settings'!H1:4`)
+		const data = await gapi.sheets.getValues(sheetId, `'Settings'!H1:5`)
 
 		return data.data.values
 	}

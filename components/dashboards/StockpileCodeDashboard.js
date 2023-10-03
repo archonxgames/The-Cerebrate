@@ -6,13 +6,13 @@ function processData(data) {
 	//Iterate over the stockpile names
 	data[2].forEach((stockpile, index) => {
 		//skip over unused or empty cells
-		if (stockpile != "--" && stockpile != "") {
+		if (stockpile != "--" && stockpile != "" && data[4][index] == 'TRUE') {
 			let region = data[0][index]
 			let town = data[1][index]
 			let value = stockpiles.get(region)
 			let append = {
 					name: stockpile,
-					code: (data[3][index] != null) ? data[3][index] : '--'
+					code: (data[3] != undefined && data[3][index] != undefined) ? data[3][index] : '--'
 			}
 			if (value === undefined) {
 					let towns = new Map()
@@ -47,10 +47,15 @@ function generateEmbeds(data, color, lastUpdated) {
 			fields: Array.from(towns, ([town, stockpiles]) => ({
 		    name: `${town}\n_ _`,
 		    value: `${stringifyStockpiles(stockpiles)}_ _`
-		})),
-			"timestamp": lastUpdated
+			}))
 		}
-	))
+	)).concat([{
+		color: color,
+		footer: {
+			text: "Last Updated"
+		},
+		timestamp: lastUpdated
+	}])
 
 	return embeds
 }
