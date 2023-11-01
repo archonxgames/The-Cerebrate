@@ -15,17 +15,17 @@ function calculateProgress(target, actual) {
 }
 
 function renderTick(progress) {
-	return (progress >= 100) ? "<a:greentick:1015609031617949728>" : ""
+	return (progress >= 100) ? "<:done:1169121523538350130>" : ""
 }
 
 function renderPriority(priority) {
 	switch(priority.toUpperCase()) {
 		case "HIGH":
-			return '<:prioh:1169119691881578546>'
+			return '<:high:1169119691881578546>'
 		case "MED":
-			return '<:priom:1169119697195765860>'
+			return '<:medium:1169119697195765860>'
 		case "LOW":
-			return '<:priol:1169119687859241022>'
+			return '<:low:1169119687859241022>'
 		default:
 			return ''
 	}
