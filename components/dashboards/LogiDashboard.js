@@ -21,11 +21,11 @@ function renderTick(progress) {
 function renderPriority(priority) {
 	switch(priority.toUpperCase()) {
 		case "HIGH":
-			return '<:PRIOHIGH:1061897931558486076>'
+			return '<:prioh:1169119691881578546>'
 		case "MED":
-			return '<:PRIOMED:1061897963191943229>'
+			return '<:priom:1169119697195765860>'
 		case "LOW":
-			return '<:PRIOLOW:1061897988429066322>'
+			return '<:priol:1169119687859241022>'
 		default:
 			return ''
 	}
