@@ -31,7 +31,7 @@ module.exports = {
 	},
 
 	async getStockpileCodes(sheetId) {
-		const data = await gapi.sheets.getValues(sheetId, `'Settings'!H1:5`)
+		const data = await gapi.sheets.getValues(sheetId, `'Settings'!H1:6`)
 
 		return data.data.values
 	}

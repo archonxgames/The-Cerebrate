@@ -6,7 +6,7 @@ function processData(data) {
 	//Iterate over the stockpile names
 	data[2].forEach((stockpile, index) => {
 		//skip over unused or empty cells
-		if (stockpile != "--" && stockpile != "" && data[4][index] == 'TRUE') {
+		if (stockpile != "--" && stockpile != "" && data[5][index] == 'TRUE') {
 			let region = data[0][index]
 			let town = data[1][index]
 			let value = stockpiles.get(region)
