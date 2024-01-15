@@ -110,7 +110,28 @@ module.exports = {
 			dashboardSettings.forEach(async (dashboardSetting) => {
 				let guildId = dashboardSetting.guildId
 				let channel = await client.guilds.cache.get(guildId).channels.cache.get(dashboardSetting.dashboardChannelId)
+				
+				//delete all dashboards belonging to a channel if the channel no longer exists
+				if(channel === undefined) {
+					Logger.info(`DashboardRefreshHandler.js`, 'refreshAll', 'The channel containing the dashboard no longer exists. Deleting all dashboards associated with the channel.')
+					await DashboardSetting.destroy({
+						where: {
+							dashboardChannelId: dashboardSetting.dashboardChannelId
+						}
+					})
+				}
 				let message = await channel.messages.fetch(dashboardSetting.dashboardMessageId)
+
+				//delete dashboard if its bound message no longer exists
+				if(message === undefined) {
+					Logger.info(`DashboardRefreshHandler.js`, 'refreshAll', 'The message containing the dashboard no longer exists. Deleting dashboard entry.')
+					await DashboardSetting.destroy({
+						where: {
+							dashboardMessageId: dashboardSetting.dashboardMessageId
+						}
+					})
+				}
+
 				let result = await handleRefresh(dashboardSetting)
 				return await message.edit(result.message)
 			})
