@@ -131,8 +131,12 @@ module.exports = {
 					})
 				})
 
-				let result = await handleRefresh(dashboardSetting)
-				return await message.edit(result.message)
+				if (message !== undefined) {
+					let result = await handleRefresh(dashboardSetting)
+					return await message.edit(result.message)
+				}
+
+				return
 			})
 		} catch(error) {
 			Logger.error('DashboardRefreshHandler.js', 'refreshAll', 'Error refreshing all dashboards', error)
