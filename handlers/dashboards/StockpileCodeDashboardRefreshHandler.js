@@ -25,8 +25,10 @@ module.exports = {
 
 			if (result != null) {
 				var sheetId = result.sheetId
-			} else {
+			} else if (interaction != undefined) {
 				return await interaction.reply({content: 'Cannot find a stockpile sheet for the current war. Please use the `/stockpile init` command to create a stockpile sheet.', ephemeral: true})
+			} else {
+				Logger.INFO('StockpileCodeDashboardRefreshHandler.js','refresh','Cannot find a stockpile sheet for the current war. Skipping.', error)
 			}
 		} catch (error) {
 			Logger.error('StockpileCodeDashboardRefreshHandler.js','refresh','Error retrieving google sheet id from database', error)
